@@ -5,6 +5,7 @@ import type { Token } from '@/lib/mock-data';
 import { formatAddress, formatMcap, formatNumber } from '@/lib/mock-data';
 import Avatar from '@/components/ui/Avatar';
 import Badge from '@/components/ui/Badge';
+import { useLiveToken } from '@/hooks/useLiveToken';
 import type { TokenTag, TokenType } from '@/lib/mock-data';
 
 interface TokenHeaderProps {
@@ -38,7 +39,8 @@ const WebsiteIcon = () => (
   </svg>
 );
 
-export default function TokenHeader({ token }: TokenHeaderProps) {
+export default function TokenHeader({ token: initialToken }: TokenHeaderProps) {
+  const token = useLiveToken(initialToken);
   const caDisplay = `${token.contractAddress.slice(0, 10)}...${token.contractAddress.slice(-6)}`;
 
   return (

@@ -3,8 +3,10 @@ import type { Token, TokenTag, TokenType } from '@/lib/mock-data';
 import Avatar from '@/components/ui/Avatar';
 import Badge from '@/components/ui/Badge';
 import ProgressBar from '@/components/ui/ProgressBar';
+import LiveNumber from '@/components/ui/LiveNumber';
 import { formatMcap, formatAddress, formatChange, formatNumber } from '@/lib/mock-data';
 import Link from 'next/link';
+import { useLiveToken } from '@/hooks/useLiveToken';
 
 interface TokenCardProps {
   token: Token;
@@ -17,7 +19,8 @@ const ChainIcon = () => (
   </svg>
 );
 
-export default function TokenCard({ token }: TokenCardProps) {
+export default function TokenCard({ token: initialToken }: TokenCardProps) {
+  const token = useLiveToken(initialToken);
   const isPositive = token.priceChange24h >= 0;
 
   return (
@@ -114,21 +117,22 @@ export default function TokenCard({ token }: TokenCardProps) {
             </div>
             <div className="flex items-center justify-between text-xs">
               <span style={{ color: '#647079' }}>Market Cap:</span>
-              <span style={{ color: '#E8EEF0', fontFamily: 'var(--font-mono)' }}>
-                {formatMcap(token.mcap)}
-              </span>
+              <LiveNumber
+                className="px-1"
+                style={{ color: '#E8EEF0', fontFamily: 'var(--font-mono)' }}
+                value={formatMcap(token.mcap)}
+              />
             </div>
           </div>
 
           {/* Row 4: Progress Bar */}
           <div className="flex flex-col mt-2">
             <div className="text-right mb-1">
-              <span
-                className="text-[10px] font-bold tabular-nums"
+              <LiveNumber
+                className="text-[10px] font-bold tabular-nums px-1"
                 style={{ color: '#22E0C8', fontFamily: 'var(--font-mono)' }}
-              >
-                {token.bondingProgress.toFixed(3)}%
-              </span>
+                value={`${token.bondingProgress.toFixed(3)}%`}
+              />
             </div>
             <ProgressBar value={token.bondingProgress} height={4} />
           </div>

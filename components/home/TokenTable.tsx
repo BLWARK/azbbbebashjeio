@@ -4,7 +4,9 @@ import { formatMcap, formatAddress, formatChange, formatVolume, formatNumber } f
 import Avatar from '@/components/ui/Avatar';
 import Badge from '@/components/ui/Badge';
 import ProgressBar from '@/components/ui/ProgressBar';
+import LiveNumber from '@/components/ui/LiveNumber';
 import Link from 'next/link';
+import { useLiveToken } from '@/hooks/useLiveToken';
 import type { TokenTag, TokenType } from '@/lib/mock-data';
 
 interface TokenTableProps {
@@ -19,19 +21,19 @@ interface TokenTableRowProps {
 function ChangeCell({ value }: { value: number }) {
   const isPositive = value >= 0;
   return (
-    <span
-      className="tabular-nums text-xs font-semibold"
+    <LiveNumber
+      className="tabular-nums text-xs font-semibold px-1"
       style={{
         color: isPositive ? '#22E0C8' : '#FF5C4D',
         fontFamily: 'var(--font-mono)',
       }}
-    >
-      {formatChange(value)}
-    </span>
+      value={formatChange(value)}
+    />
   );
 }
 
-function TokenTableRow({ token, index }: TokenTableRowProps) {
+function TokenTableRow({ token: initialToken, index }: TokenTableRowProps) {
+  const token = useLiveToken(initialToken);
   return (
     <Link href={`/token/${token.id}`} className="block">
       <div
@@ -73,22 +75,20 @@ function TokenTableRow({ token, index }: TokenTableRowProps) {
         </div>
 
         {/* MCAP */}
-        <span
-          className="tabular-nums text-xs font-semibold"
+        <LiveNumber
+          className="tabular-nums text-xs px-1"
           style={{ color: '#E8EEF0', fontFamily: 'var(--font-mono)' }}
-        >
-          {formatMcap(token.mcap)}
-        </span>
+          value={formatMcap(token.mcap)}
+        />
 
         {/* PROGRESS */}
         <div className="flex items-center gap-2">
           <ProgressBar value={token.bondingProgress} height={3} className="flex-1" />
-          <span
-            className="tabular-nums text-xs flex-shrink-0"
+          <LiveNumber
+            className="tabular-nums text-xs flex-shrink-0 px-1"
             style={{ color: '#647079', fontFamily: 'var(--font-mono)', width: 28 }}
-          >
-            {token.bondingProgress}%
-          </span>
+            value={`${token.bondingProgress}%`}
+          />
         </div>
 
         {/* AGE */}
