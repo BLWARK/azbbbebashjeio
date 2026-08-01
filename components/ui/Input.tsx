@@ -2,7 +2,7 @@
 
 import React, { forwardRef } from 'react';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'prefix'> {
   label?: string;
   hint?: string;
   error?: string;

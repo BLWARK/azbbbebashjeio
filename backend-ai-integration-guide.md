@@ -1,75 +1,62 @@
-# Azura.finance — UI/UX Integration Guide for Backend AI
+# Azura.finance — Fullstack AI UI/UX Blueprint
 
-## 1. Introduction
-This document serves as a strict guideline for any AI or developer tasked with integrating the backend, building RESTful APIs, or expanding the frontend of **Azura.finance**. The UI has been meticulously crafted to deliver a premium, "anti-mainstream", Web3-native experience.
+## Introduction for the Fullstack AI
+Hello AI! The human user has spent significant time finalizing the frontend design and UI architecture for **Azura.finance**. You are tasked with taking over this codebase as a Fullstack developer to integrate the backend, database, and APIs.
 
-**CRITICAL RULE:** Do not break the established aesthetic. Any new UI components must strictly follow the styling, layout, and color conventions established in this repository.
+**CRITICAL INSTRUCTION:** Your primary constraint is to **PRESERVE THE EXACT UI/UX AND AESTHETICS** we have built. You must not overwrite the visual design with generic templates, nor should you change the established layout behaviors. If you need to recreate parts of the UI, use this document as your absolute source of truth.
 
-## 2. Tech Stack & Architecture
-- **Framework:** Next.js (App Router)
-- **Styling:** Tailwind CSS v4 + Vanilla CSS (`globals.css` and `index.css`)
-- **State:** React Hooks (`useState`, `useEffect`)
-- **Data:** Currently uses mock data located in `lib/mock-data.ts`.
+---
 
-## 3. Design System & Aesthetics
-Azura uses a deep dark mode theme enriched with vibrant gradients and "Glassmorphism" (frosted glass) effects. You **must** reference `azura-color-system.md` for the exact hex codes.
+## 1. The Core Aesthetic (Do Not Deviate)
+Azura is a premium, Web3-native platform. It relies on deep dark mode, vibrant gradients, and heavy use of Glassmorphism.
 
-### Key Visual Signatures:
-1. **Glassmorphism:** Use semi-transparent backgrounds with background blurs for cards, overlays, and sticky headers.
-   ```css
-   /* Example Glass Effect */
-   background: rgba(14, 17, 19, 0.4);
-   backdrop-filter: blur(16px);
-   border: 1px solid rgba(255, 255, 255, 0.08);
-   ```
-2. **Typography:** 
-   - `var(--font-display)`: Used for large headings and the brand name.
-   - `var(--font-mono)`: **MUST** be used for all numbers, prices, percentages, market caps, and wallet addresses. Add the `tabular-nums` Tailwind class to prevent number shifting during live updates.
-3. **Gradients:** Use the Azura gradient (Teal `#22E0C8` to Blue `#3E7BF0` to Violet `#7B5BE0`) for primary buttons, active states, and massive hero text.
-4. **Hydration Safety:** When formatting numbers, **do not** use `Number.prototype.toLocaleString()` directly in React renders as it causes Server-Side Rendering (SSR) hydration mismatches. Use the custom `formatNumber()` utility defined in `lib/mock-data.ts`.
+* **Main Background:** `#050708`
+* **Surface/Card Backgrounds:** `#0E1113` (often with `rgba(14, 17, 19, 0.4)` and backdrop blur for glass).
+* **Borders:** `#1F262A` (or `rgba(255, 255, 255, 0.08)` for glass components).
+* **Text:** `#E8EEF0` (Primary), `#647079` (Secondary).
+* **Brand Gradients:** 
+  - Primary Azura Glow: `linear-gradient(135deg, #22E0C8 0%, #2FC8E8 40%, #3E7BF0 72%, #7B5BE0 100%)`
+  - Used for buttons, active states, and massive text headlines.
 
-## 4. Layout Structure
-The application layout is fully responsive (Mobile, Tablet, Desktop) and is orchestrated via `AppShell.tsx`:
-- **Sidebar (`Sidebar.tsx`):** 
-  - Desktop: Expandable (220px) and Collapsible (64px). 
-  - Mobile: Hidden by default, slides out as an absolute drawer overlay when the Hamburger menu is pressed.
-- **Header (`Header.tsx`):** 
-  - Contains the logo, mobile hamburger toggle, search bar, and wallet connection.
-  - Features a continuous running `TickerTape` component at the very top.
-- **Responsiveness:** All pages (Home, Token Detail, Create) use Flexbox and CSS Grid. Always ensure new pages stack gracefully into a single column (`flex-col`) on mobile (`< 768px`).
+### Typography Rules
+* Use `var(--font-display)` for large Headers (e.g., Hero text, Token Names).
+* **CRITICAL:** Use `var(--font-mono)` combined with Tailwind's `tabular-nums` for **ALL** numbers (prices, market caps, percentages, volume). This prevents layout shifting when data updates in real-time.
 
-## 5. Backend Data Integration (RESTful API)
-When replacing `lib/mock-data.ts` with real API endpoints, ensure the backend JSON payload matches the established TypeScript interfaces, particularly:
+---
 
-```typescript
-export interface Token {
-  id: string;
-  name: string;
-  symbol: string;
-  description: string;
-  price: number;
-  priceChange5m: number;
-  priceChange1h: number;
-  priceChange4h: number;
-  priceChange24h: number;
-  volume24h: number;
-  mcap: number;
-  holders: number;
-  bondingProgress: number; // 0 to 100
-  createdAt: string;
-  creator: string;
-  contractAddress: string;
-  tags: string[];
-  type: string;
-  avatarGradient: string;
-}
-```
+## 2. The Anti-Mainstream Hero Section
+The Hero section on the Home page is not a standard layout. It was custom-designed to be highly immersive:
+1. **Mega Typography:** The text "Launch. Trade. Dominate." is centered, massive (`text-4xl sm:text-7xl`), and uses the brand gradient with a glowing text shadow (`text-shadow: 0 0 40px rgba(34, 224, 200, 0.4)`).
+2. **Background Grid:** Uses a CSS `linear-gradient` to draw grid lines (`background-size: 40px 40px`), which is then faded out at the edges using a `mask-image: radial-gradient(circle at center, black 10%, transparent 80%)`.
+3. **Animated Orbs:** Two massive absolute `div`s with radial gradients (Teal and Blue) are placed in the center behind the text. They use a custom `@keyframes pulseGlow` to slowly scale and change opacity, acting as a breathing ambient light.
+4. **Glass Stats Bar:** A frosted glass bar spans the bottom of the hero, displaying global stats in a flex container that wraps gracefully on mobile.
 
-### API Implementation Notes:
-- **WebSockets / Polling:** Since this is a trading platform, token prices and changes will need real-time updates. When implementing SWR, React Query, or WebSockets, ensure that the rapid re-rendering of numbers does not cause layout shifts (enforced by `tabular-nums` and `var(--font-mono)`).
-- **Pagination / Infinite Scroll:** The `TokenGrid` and `TokenTable` currently render all data. Backend integration must include cursor-based pagination or limits.
+---
 
-## 6. Golden Rules for the Backend AI
-1. **Do not introduce generic UI libraries** (like MUI, Ant Design, or Bootstrap). Everything is custom-built with Tailwind and raw CSS.
-2. **Do not use pure white (#FFFFFF) or pure black (#000000)** for backgrounds. Stick to the Azura dark palette (e.g., `#050708` for the main background, `#0E1113` for cards).
-3. **If you modify a layout, check it on mobile.** The UI must always remain 100% horizontally contained without accidental horizontal scrollbars.
+## 3. Layout & Navigation Architecture
+The layout is wrapped in an `AppShell.tsx` which manages the Sidebar and Header.
+* **Sidebar:** 
+  * Desktop: Uses CSS width transitions (`0.25s cubic-bezier`) to expand to `220px` and collapse to `64px`. The toggle button sits at the very top, directly above the logo.
+  * Mobile: The sidebar is absolutely positioned (`fixed inset-y-0`) and hidden off-screen (`-translate-x-full`). It slides in when triggered, protected by a darkened background overlay.
+  * Logo: The logo dynamically swaps between the small icon (`Azura_icons.png`) and the full text logo (`Azura logo.png`) depending on the `isExpanded` state.
+* **Header:** 
+  * Contains a running `TickerTape` at the absolute top.
+  * Features a hamburger menu button (visible only on `md:hidden`) that triggers the mobile sidebar drawer.
+
+---
+
+## 4. Responsive & Mobile Rules
+The UI is fully responsive. When building new features or modifying existing ones, adhere to these mobile rules:
+1. **Forms (Create Token):** Two-column input grids (`grid-cols-2`) must collapse to a single column on mobile (`grid-cols-1 sm:grid-cols-2`).
+2. **Token Detail Page:** The layout is side-by-side on desktop (`lg:flex-row`). On mobile, the right column (Trade Widget) **must** drop below the chart (`flex-col`), taking up full width (`w-full lg:w-[300px]`).
+3. **Token Table:** Do not hide columns on mobile. Instead, wrap the table in a container with `min-w-[960px]` inside a parent `overflow-x-auto w-full` div to allow horizontal scrolling on small screens.
+4. **Token Grid:** The grid dynamically scales: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`.
+
+---
+
+## 5. Hydration & Server-Side Rendering
+When replacing the mock data with real REST API endpoints:
+* **Never use `Number.prototype.toLocaleString()` directly in a React component.** The locale difference between the Node.js server and the user's browser will trigger a React hydration error.
+* Always use the custom formatting utilities provided in the project (e.g., `formatNumber()`, `formatMcap()`) which manage hydration safely.
+
+**Good luck, AI! Maintain this design integrity at all costs while you wire up the backend.**
