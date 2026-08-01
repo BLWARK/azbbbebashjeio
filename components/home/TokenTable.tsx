@@ -51,7 +51,7 @@ function TokenTableRow({ token, index }: TokenTableRowProps) {
 
         {/* COIN */}
         <div className="flex items-center gap-2 min-w-0">
-          <Avatar gradient={token.avatarGradient} symbol={token.symbol} size={28} />
+          <Avatar gradient={token.avatarGradient} symbol={token.symbol} size={28} src={token.imageSrc} />
           <div className="flex flex-col min-w-0">
             <span className="text-xs font-semibold truncate" style={{ color: '#E8EEF0' }}>
               {token.name}

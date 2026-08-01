@@ -47,7 +47,7 @@ export default function TokenHeader({ token }: TokenHeaderProps) {
       style={{ borderBottom: '1px solid #1F262A' }}
     >
       {/* Avatar */}
-      <Avatar gradient={token.avatarGradient} symbol={token.symbol} size={72} />
+      <Avatar gradient={token.avatarGradient} symbol={token.symbol} size={72} src={token.imageSrc} />
 
       {/* Info */}
       <div className="flex-1 min-w-0 flex flex-col gap-2">

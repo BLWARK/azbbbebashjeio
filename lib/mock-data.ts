@@ -8,6 +8,7 @@ export interface Token {
   id: string;
   name: string;
   symbol: string;
+  imageSrc?: string;
   /** CSS gradient string for avatar background */
   avatarGradient: string;
   creator: string;
@@ -70,7 +71,7 @@ export interface TickerItem {
 // ================================================================
 // Mock Tokens
 // ================================================================
-export const MOCK_TOKENS: Token[] = [
+const RAW_TOKENS: Token[] = [
   {
     id: '1',
     name: 'AzuraSwap',
@@ -351,6 +352,17 @@ export const MOCK_TOKENS: Token[] = [
     graduated: false,
   },
 ];
+
+const AVAILABLE_IMAGES = [
+  '/1.png', '/2.png', '/3.png', '/4.png', '/5.png',
+  '/6.jpg', '/6.png', '/7.jpg', '/7.png', '/8.png',
+  '/9.png', '/10.png'
+];
+
+export const MOCK_TOKENS: Token[] = RAW_TOKENS.slice(0, 16).map((token, index) => ({
+  ...token,
+  imageSrc: AVAILABLE_IMAGES[index % AVAILABLE_IMAGES.length]
+}));
 
 // ================================================================
 // Mock Trades
