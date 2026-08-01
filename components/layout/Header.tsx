@@ -144,7 +144,7 @@ export default function Header({ onMobileMenuToggle }: { onMobileMenuToggle?: ()
 
           {/* Language */}
           <button
-            className="flex items-center gap-1.5 px-3 rounded-lg text-xs font-medium transition-colors duration-150"
+            className="hidden md:flex items-center gap-1.5 px-3 rounded-lg text-xs font-medium transition-colors duration-150"
             style={{
               height: 36,
               background: '#0E1113',
@@ -164,7 +164,7 @@ export default function Header({ onMobileMenuToggle }: { onMobileMenuToggle?: ()
           </button>
 
           {/* Create Token shortcut */}
-          <Link href="/create">
+          <Link href="/create" className="hidden sm:block">
             <Button variant="secondary" size="sm" id="header-create-token-btn">
               + Create
             </Button>
@@ -175,10 +175,11 @@ export default function Header({ onMobileMenuToggle }: { onMobileMenuToggle?: ()
             variant="primary"
             size="sm"
             id="header-connect-wallet-btn"
-            style={{ minWidth: 130 }}
+            className="px-2 sm:px-4"
           >
             <WalletIcon />
-            Connect Wallet
+            <span className="hidden sm:inline">Connect Wallet</span>
+            <span className="sm:hidden">Connect</span>
           </Button>
         </div>
       </div>

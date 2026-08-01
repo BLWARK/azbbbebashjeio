@@ -60,3 +60,18 @@ When replacing the mock data with real REST API endpoints:
 * Always use the custom formatting utilities provided in the project (e.g., `formatNumber()`, `formatMcap()`) which manage hydration safely.
 
 **Good luck, AI! Maintain this design integrity at all costs while you wire up the backend.**
+
+---
+
+## 6. Real-Time Animations & Websockets
+The frontend is already configured with components that react to live data updates:
+1. **Flashing Numbers (`LiveNumber.tsx`):** We use a custom component for numerical data (Market Cap, Price, %, Progress). Whenever the prop `value` changes, the component automatically flashes green (if increased) or red (if decreased) before fading out. You do NOT need to manage this state; simply pass the new numbers from your websocket/backend and the UI will animate itself.
+2. **Smooth Layout Shifts (`TokenGrid.tsx`):** The grid uses `framer-motion`'s `<motion.div layout>` to animate cards swapping positions. When replacing our mock shuffle interval with a real backend sorting mechanism (e.g., top trending tokens), just update the React state array. Framer Motion will automatically handle the buttery smooth glide animations.
+
+---
+
+## 7. Token Images & Avatars
+The `TokenCard`, `TokenTable`, and `TokenHeader` components have been updated to accept actual image paths instead of CSS gradients.
+* The `Token` interface now includes `imageSrc?: string`.
+* The `Avatar` component accepts a `src` prop which renders an `<img>`.
+* When writing the backend, ensure your database/API returns a valid URL string for `imageSrc` (pointing to AWS S3, IPFS, or local `/public` files).
