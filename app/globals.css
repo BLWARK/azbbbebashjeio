@@ -1,26 +1,258 @@
 @import "tailwindcss";
 
+/* ================================================================
+   AZURA DESIGN SYSTEM — globals.css
+   Identity: four-stop gradient (teal→cyan→blue→violet) on true black
+   Type: Inter Tight (display) + IBM Plex Mono (data/labels)
+   ================================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Field (dark → light) */
+  --base:      #050708;
+  --surface:   #0E1113;
+  --surface-2: #151A1D;
+  --line:      #1F262A;
+
+  /* Core gradient */
+  --teal:   #22E0C8;
+  --cyan:   #2FC8E8;
+  --blue:   #3E7BF0;
+  --violet: #7B5BE0;
+
+  /* State & text */
+  --coral: #FF5C4D;
+  --text:  #E8EEF0;
+  --muted: #647079;
+
+  /* Gradients */
+  --grad-identity: linear-gradient(120deg, #22E0C8 0%, #2FC8E8 40%, #3E7BF0 72%, #7B5BE0 100%);
+  --grad-cta:      linear-gradient(120deg, #22E0C8, #3E7BF0);
+
+  /* Teal scale */
+  --teal-50:  #E0FBF7;
+  --teal-100: #C1F6F0;
+  --teal-200: #99F1E6;
+  --teal-900: #125049;
+
+  /* Violet scale */
+  --violet-50:  #EDE8FB;
+  --violet-100: #DAD1F6;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ================================================================
+   Base Reset
+   ================================================================ */
+*, *::before, *::after { box-sizing: border-box; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
+  background-color: var(--base);
+  color: var(--text);
+  font-family: var(--font-display, "Inter Tight", "Inter", sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ================================================================
+   Custom Scrollbar
+   ================================================================ */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ================================================================
+   Color Utilities
+   ================================================================ */
+.bg-base      { background-color: var(--base); }
+.bg-surface   { background-color: var(--surface); }
+.bg-surface-2 { background-color: var(--surface-2); }
+
+.border-line  { border-color: var(--line); }
+
+.text-primary    { color: var(--text); }
+.text-muted-az   { color: var(--muted); }
+.text-teal       { color: var(--teal); }
+.text-coral      { color: var(--coral); }
+.text-cyan-az    { color: var(--cyan); }
+.text-violet-az  { color: var(--violet); }
+.text-blue-az    { color: var(--blue); }
+
+/* ================================================================
+   Gradient Utilities
+   ================================================================ */
+.gradient-text {
+  background: var(--grad-identity);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-cta-bg      { background: var(--grad-cta); }
+.gradient-identity-bg { background: var(--grad-identity); }
+
+/* ================================================================
+   Glow Effects
+   ================================================================ */
+.glow-teal    { box-shadow: 0 0 24px rgba(34, 224, 200, 0.35); }
+.glow-teal-sm { box-shadow: 0 0 10px rgba(34, 224, 200, 0.2); }
+.glow-violet  { box-shadow: 0 0 24px rgba(123, 91, 224, 0.35); }
+
+/* ================================================================
+   Component: Token Card
+   ================================================================ */
+.token-card {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+.token-card:hover {
+  border-color: rgba(34, 224, 200, 0.5);
+  box-shadow: 0 4px 28px rgba(34, 224, 200, 0.12);
+  transform: translateY(-2px);
+}
+
+/* ================================================================
+   Component: Sidebar
+   ================================================================ */
+.sidebar-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  color: var(--muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+.sidebar-nav-item:hover {
+  background-color: var(--surface-2);
+  color: var(--text);
+}
+.sidebar-nav-item.active {
+  background-color: var(--surface-2);
+  color: var(--teal);
+}
+.sidebar-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 24px;
+  background: var(--grad-cta);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ================================================================
+   Component: Ticker Tape
+   ================================================================ */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.ticker-tape {
+  display: flex;
+  width: max-content;
+  animation: ticker 40s linear infinite;
+}
+.ticker-tape:hover { animation-play-state: paused; }
+
+/* ================================================================
+   Component: Progress Bar
+   ================================================================ */
+.progress-track {
+  background-color: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  background: var(--grad-cta);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* ================================================================
+   Animations
+   ================================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-fade-in  { animation: fadeIn 0.4s ease forwards; }
+.animate-float    { animation: float 4s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+
+/* ================================================================
+   Live Dot
+   ================================================================ */
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--teal);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ================================================================
+   Tab system
+   ================================================================ */
+.az-tab {
+  position: relative;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+.az-tab:hover { color: var(--text); }
+.az-tab.active {
+  color: var(--teal);
+  border-bottom-color: var(--teal);
+}
+
+/* ================================================================
+   Table
+   ================================================================ */
+.az-table-row {
+  border-bottom: 1px solid var(--line);
+  transition: background-color 0.12s ease;
+}
+.az-table-row:hover { background-color: var(--surface-2); }
+
+/* ================================================================
+   Chart gradient area
+   ================================================================ */
+.chart-area-gradient {
+  stop-color: var(--teal);
 }
